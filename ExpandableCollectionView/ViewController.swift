@@ -10,7 +10,7 @@ import SnapKit
 
 class ViewController: UIViewController {
     
-    var colors: [UIColor] = [.black, .blue, .brown, .white, .cyan, .darkGray, .lightGray, .magenta, .link, .purple, .red, .green, .systemGray, .systemOrange, .systemTeal]
+    var colors: [UIColor] = [.orange, .white, .cyan, .purple]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,9 +47,9 @@ class ViewController: UIViewController {
     
     private func getViews() -> [UIView] {
         var res: [UIView] = []
-        for _ in 0...3 {
+        for index in 0...3 {
             let view = UIView()
-            view.backgroundColor = colors.randomElement()
+            view.backgroundColor = colors[index]
             let label = UILabel()
             label.text = "Hey there !"
             view.addSubview(label)

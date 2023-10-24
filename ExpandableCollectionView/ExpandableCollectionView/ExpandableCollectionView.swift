@@ -61,36 +61,33 @@ final class ExpandableCollectionView: UIView {
     }
     
     private func animateToCollapsedState(view: UIView, index: Int) {
-        let oldSize = view.bounds.applying(view.transform)
-        let oldFrame = view.frame.applying(view.transform)
         let newHeight = viewModel.getHeight(forViewAtIndex: index)
         let newWidth = viewModel.getWidth(forViewAtIndex: index)
         
-        let oldLeadingPadding = oldFrame.origin.x
-        let oldTopPadding = oldFrame.origin.y
+        let oldLeadingPadding = view.frame.minX
+        let oldTopPadding = view.frame.minY
         let newLeadingPadding = viewModel.getLeadingPadding(forViewAtIndex: index)
         let newTopPadding = viewModel.getTopPadding(forViewAtIndex: index)
         
-        print(newHeight.description + " " + newWidth.description + " " + newLeadingPadding.description + " " + newTopPadding.description)
-        print(oldLeadingPadding.description)
-        print(oldTopPadding.description)
-        print(oldSize.width)
-        print(oldSize.height)
+//        print(newHeight.description + " " + newWidth.description + " " + newLeadingPadding.description + " " + newTopPadding.description)
+//        print(oldLeadingPadding.description)
+//        print(oldTopPadding.description)
+//        print(oldSize.width)
+//        print(oldSize.height)
         view.transform = view.transform.translatedBy(
             x: CGFloat(newLeadingPadding) - oldLeadingPadding,
             y: CGFloat(newTopPadding) - oldTopPadding
         ).scaledBy(
-            x: (CGFloat(newWidth) / oldSize.width),
-            y: (CGFloat(newHeight) / oldSize.height)
+            x: (CGFloat(newWidth) / view.bounds.width),
+            y: (CGFloat(newHeight) / view.bounds.height)
         )
     }
     
     func zoomOut() {
         viewModel.magnifiedViewIndex = nil
         UIView.animate(withDuration: 1, animations: { [weak self] in
-            guard let self else { return }
-            for (index, view) in config.views.enumerated() {
-                animateToCollapsedState(view: view, index: index)
+            for view in self?.config.views ?? [] {
+                view.transform = .identity
             }
         })
     }
