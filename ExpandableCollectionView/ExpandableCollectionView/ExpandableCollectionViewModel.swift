@@ -8,7 +8,7 @@
 import Foundation
 
 final class ExpandableCollectionViewModel {
-    let config: ExpandableCollectionViewConfig
+    var config: ExpandableCollectionViewConfig
     var magnifiedViewIndex: Int? = nil
     
     private var totalElements: Int {
@@ -25,7 +25,7 @@ final class ExpandableCollectionViewModel {
             return config.expandedStateTotalHeight
         case 2:
             if let magnifiedViewIndex {
-                return magnifiedViewIndex == index ? config.expandedStateTotalHeight : config.collapsedStateTotalHeight / (totalElements - 1)
+                return magnifiedViewIndex == index ? config.expandedStateTotalHeight : config.collapsedStateTotalMinHeight / (totalElements - 1)
             } else {
                 return config.expandedStateTotalHeight / 2
             }
@@ -74,6 +74,15 @@ final class ExpandableCollectionViewModel {
     }
     
     func getTopPadding(forViewAtIndex index: Int) -> Int {
+        if magnifiedViewIndex == index {
+            return 0
+        } else if let magnifiedViewIndex {
+            let totalHeight = totalElements <= 2 ? config.collapsedStateTotalMinHeight : config.collapsedStateTotalHeight
+            let collapsedCellHeight = totalHeight / (totalElements - 1)
+            let previousCellsCount = index > magnifiedViewIndex ? index : index + 1
+            return config.collapsedStateTopPadding + collapsedCellHeight * previousCellsCount
+        }
+
         switch totalElements {
         case 1:
             return 0
@@ -84,27 +93,9 @@ final class ExpandableCollectionViewModel {
                 return index == 0 ? 0 : config.expandedStateTotalHeight / 2
             }
         case 3:
-            if let magnifiedViewIndex {
-                if magnifiedViewIndex == index {
-                    return config.collapsedStateTopPadding
-                }
-
-                let collapsedCellHeight = config.collapsedStateTotalHeight / totalElements
-                return collapsedCellHeight * (index - 1)
-            } else {
-                return index == 0 ? 0 : config.expandedStateTotalHeight / 2
-            }
+            return index == 0 ? 0 : config.expandedStateTotalHeight / 2
         case 4:
-            if let magnifiedViewIndex {
-                if magnifiedViewIndex == index {
-                    return config.collapsedStateTopPadding
-                }
-
-                let collapsedCellHeight = config.collapsedStateTotalHeight / totalElements
-                return config.collapsedStateTopPadding + collapsedCellHeight * (index - 1)
-            } else {
-                return (index == 0 || index == 1) ? 0 : config.expandedStateTotalHeight / 2
-            }
+            return (index == 0 || index == 1) ? 0 : config.expandedStateTotalHeight / 2
         default:
             return 0
         }

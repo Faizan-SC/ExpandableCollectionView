@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B33C22BE2AF0DFAA007343EB /* NonExpandableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33C22BD2AF0DFAA007343EB /* NonExpandableView.swift */; };
 		B39C566D2AE78940000B2392 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B39C566C2AE78940000B2392 /* AppDelegate.swift */; };
 		B39C566F2AE78940000B2392 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B39C566E2AE78940000B2392 /* SceneDelegate.swift */; };
 		B39C56712AE78940000B2392 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B39C56702AE78940000B2392 /* ViewController.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B33C22BD2AF0DFAA007343EB /* NonExpandableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NonExpandableView.swift; sourceTree = "<group>"; };
 		B39C56692AE78940000B2392 /* ExpandableCollectionView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExpandableCollectionView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B39C566C2AE78940000B2392 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B39C566E2AE78940000B2392 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -82,6 +84,7 @@
 				B3FC483E2AE7BE660030BB03 /* ExpandableCollectionView.swift */,
 				B3FC48402AE7BEB80030BB03 /* ExpandableCollectionViewModel.swift */,
 				B3FC48422AE7BF100030BB03 /* ExpandableCollectionViewConfig.swift */,
+				B33C22BD2AF0DFAA007343EB /* NonExpandableView.swift */,
 			);
 			path = ExpandableCollectionView;
 			sourceTree = "<group>";
@@ -165,6 +168,7 @@
 			files = (
 				B3FC483F2AE7BE660030BB03 /* ExpandableCollectionView.swift in Sources */,
 				B39C56712AE78940000B2392 /* ViewController.swift in Sources */,
+				B33C22BE2AF0DFAA007343EB /* NonExpandableView.swift in Sources */,
 				B3FC48432AE7BF100030BB03 /* ExpandableCollectionViewConfig.swift in Sources */,
 				B3FC48412AE7BEB80030BB03 /* ExpandableCollectionViewModel.swift in Sources */,
 				B39C566D2AE78940000B2392 /* AppDelegate.swift in Sources */,

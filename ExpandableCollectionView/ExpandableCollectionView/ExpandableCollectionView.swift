@@ -35,7 +35,7 @@ final class ExpandableCollectionView: UIView {
         }
     }
     
-    func magnify(viewAtIndex index: Int) {
+    func magnify(viewAtIndex index: Int, completionHandler: @escaping (() -> Void)) {
         viewModel.magnifiedViewIndex = index
         let view = config.views[index]
         self.sendSubviewToBack(view) // to ensure smaller views are always visible
@@ -43,20 +43,45 @@ final class ExpandableCollectionView: UIView {
         let oldHeight = view.bounds.height
         let newHeight = viewModel.getHeight(forViewAtIndex: index)
         let newWidth = viewModel.getWidth(forViewAtIndex: index)
+
         layoutIfNeeded()
         for (index, view) in config.views.enumerated() {
             view.setAnchorPoint(viewModel.getAnchorPoint(forViewAtIndex: index))
         }
         layoutIfNeeded()
-        UIView.animate(withDuration: 1, animations: { [weak self, oldWidth, oldHeight, newHeight, newWidth] in
+        
+        let duration: TimeInterval = config.shouldSkipInitialAnimation ? 0 : 1
+        config.shouldSkipInitialAnimation = false
+        UIView.animate(withDuration: duration, animations: { [weak self, oldWidth, oldHeight, newHeight, newWidth] in
             guard let self else { return }
-            view.transform = view.transform.scaledBy(
-                x: (CGFloat(newWidth) / oldWidth),
-                y: (CGFloat(newHeight) / oldHeight)
+            let xScaleFactor = CGFloat(newWidth) / oldWidth
+            let yScaleFactor = CGFloat(newHeight) / oldHeight
+            
+            let oldLeadingPadding = view.frame.minX
+            let oldTopPadding = view.frame.minY
+            let newLeadingPadding = viewModel.getLeadingPadding(forViewAtIndex: index)
+            let newTopPadding = viewModel.getTopPadding(forViewAtIndex: index)
+
+            view.transform = view.transform.translatedBy(
+                x: CGFloat(newLeadingPadding) - oldLeadingPadding,
+                y: CGFloat(newTopPadding) - oldTopPadding
+            ).scaledBy(
+                x: xScaleFactor,
+                y: yScaleFactor
             )
+            
+            for subviewToExclude in view.subviews.filter({ $0 is NonExpandableView }) {
+                subviewToExclude.transform = subviewToExclude.transform.scaledBy(
+                    x: 1 / xScaleFactor,
+                    y: 1 / yScaleFactor
+                )
+            }
+
             for (index, view) in config.views.enumerated() where index != viewModel.magnifiedViewIndex {
                 animateToCollapsedState(view: view, index: index)
             }
+        }, completion: { _ in
+            completionHandler()
         })
     }
     
@@ -68,12 +93,7 @@ final class ExpandableCollectionView: UIView {
         let oldTopPadding = view.frame.minY
         let newLeadingPadding = viewModel.getLeadingPadding(forViewAtIndex: index)
         let newTopPadding = viewModel.getTopPadding(forViewAtIndex: index)
-        
-//        print(newHeight.description + " " + newWidth.description + " " + newLeadingPadding.description + " " + newTopPadding.description)
-//        print(oldLeadingPadding.description)
-//        print(oldTopPadding.description)
-//        print(oldSize.width)
-//        print(oldSize.height)
+
         view.transform = view.transform.translatedBy(
             x: CGFloat(newLeadingPadding) - oldLeadingPadding,
             y: CGFloat(newTopPadding) - oldTopPadding
@@ -88,6 +108,9 @@ final class ExpandableCollectionView: UIView {
         UIView.animate(withDuration: 1, animations: { [weak self] in
             for view in self?.config.views ?? [] {
                 view.transform = .identity
+                if let subviewToZoom = view.subviews.first {
+                    subviewToZoom.transform = .identity
+                }
             }
         })
     }
