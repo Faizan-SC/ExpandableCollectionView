@@ -20,7 +20,7 @@ class ViewController: UIViewController {
     
     private func setupUI() {
         let collectionView = setupExpandableCollectionView()
-
+        collectionView.isHidden = false
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
             self?.expandableCollectionView?.magnify(viewAtIndex: 0) { }
         }
@@ -42,8 +42,10 @@ class ViewController: UIViewController {
             )
             self.view.layoutIfNeeded()
             collectionView.magnify(viewAtIndex: 0) {
-                self.expandableCollectionView?.removeFromSuperview()
+                self.view.layoutIfNeeded()
                 collectionView.isHidden = false
+                self.expandableCollectionView?.isHidden = true
+                self.expandableCollectionView?.removeFromSuperview()
                 self.expandableCollectionView = collectionView
             }
         }
@@ -69,7 +71,7 @@ class ViewController: UIViewController {
                 shouldSkipInitialAnimation: false
             )
         )
-        expandableCollectionView.isHidden = false
+        expandableCollectionView.isHidden = true
         view.addSubview(expandableCollectionView)
         expandableCollectionView.snp.makeConstraints { make in
             make.directionalVerticalEdges.directionalHorizontalEdges.equalToSuperview()
@@ -82,7 +84,7 @@ class ViewController: UIViewController {
 
     private func getViews() -> [UIView] {
         var res: [UIView] = []
-        for index in 0...3 {
+        for index in 0...2 {
             let view = UIView()
             view.backgroundColor = colors[index]
             let label = NonExpandableLabel()
